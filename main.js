@@ -1,3 +1,13 @@
+const http = require("http");
+
+http.createServer((req, res) => {
+    res.writeHead(200, 
+        { "content-type": "text/plain"});
+        res.end("Seu script está rodando!\n");
+}).listen(3000, "0.0.0.0", () => {
+    console.log("Servidor rodando na porta 3000.");
+});
+
 const axios = require("axios");
 const URL = "https://api.coincap.io/v2/assets";
 const INTERVAL = 10000; //10 secs
@@ -248,3 +258,4 @@ function checkAlerts() {
 
 setInterval(updateBook, INTERVAL);
 setInterval(checkAlerts, INTERVAL);
+
