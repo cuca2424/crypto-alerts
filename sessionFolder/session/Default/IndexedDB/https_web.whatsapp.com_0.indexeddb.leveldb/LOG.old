@@ -1,0 +1,13 @@
+2024/12/03-14:41:41.821 3290 Reusing MANIFEST C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/12/03-14:41:41.822 3290 Recovering log #52
+2024/12/03-14:41:41.824 3290 Reusing old log C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000052.log 
+2024/12/03-14:41:47.274 f7c Level-0 table #57: started
+2024/12/03-14:41:47.302 f7c Level-0 table #57: 24894 bytes OK
+2024/12/03-14:41:47.331 f7c Delete type=0 #52
+2024/12/03-14:41:47.332 f7c Manual compaction at level-0 from '\x00\x1a\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1b\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/12/03-14:41:47.366 f7c Compacting 1@1 + 1@2 files
+2024/12/03-14:41:47.640 f7c Generated table #58@1: 40893 keys, 1623184 bytes
+2024/12/03-14:41:47.640 f7c Compacted 1@1 + 1@2 files => 1623184 bytes
+2024/12/03-14:41:47.754 f7c compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/12/03-14:41:47.755 f7c Delete type=2 #54
+2024/12/03-14:41:47.755 f7c Delete type=2 #57
