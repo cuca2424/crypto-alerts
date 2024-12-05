@@ -10,10 +10,10 @@ http.createServer((req, res) => {
 
 //mongo
 require("dotenv").config();
-const mongoURI = process.env.MONGO_URI;
+const mongo_uri = process.env.MONGO_URI;
 const mongoose = require("mongoose");
 const Notification = require("./Notification.js");
-mongoose.connect(mongoURI).then(console.log("conectado ao banco de dados."))
+mongoose.connect(mongo_uri).then(console.log("conectado ao banco de dados.")).catch(err => console.log(err))
 
 const axios = require("axios");
 const URL = "https://api.coincap.io/v2/assets";
@@ -276,4 +276,4 @@ async function checkAlerts() {
 
 setInterval(updateBook, INTERVAL);
 setInterval(checkAlerts, INTERVAL);
-
+    
