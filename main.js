@@ -9,9 +9,10 @@ http.createServer((req, res) => {
 });
 
 //mongo
+cosnt mongoURI = process.env.MONGO_URI;
 const mongoose = require("mongoose");
 const Notification = require("./Notification.js");
-mongoose.connect("mongodb://localhost:27017/crypto-alerts").then(console.log("conectado ao banco de dados."))
+mongoose.connect(mongoURI).then(console.log("conectado ao banco de dados."))
 
 const axios = require("axios");
 const URL = "https://api.coincap.io/v2/assets";
