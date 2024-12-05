@@ -9,6 +9,7 @@ http.createServer((req, res) => {
 });
 
 //mongo
+require("dotenv").config();
 const mongoURI = process.env.MONGO_URI;
 const mongoose = require("mongoose");
 const Notification = require("./Notification.js");
