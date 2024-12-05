@@ -8,6 +8,11 @@ http.createServer((req, res) => {
     console.log("Servidor rodando na porta 3000.");
 });
 
+//mongo
+const mongoose = require("mongoose");
+const Notification = require("./Notification.js");
+mongoose.connect("mongodb://localhost:27017/crypto-alerts").then(console.log("conectado ao banco de dados."))
+
 const axios = require("axios");
 const URL = "https://api.coincap.io/v2/assets";
 const INTERVAL = 10000; //10 secs
@@ -41,14 +46,19 @@ const LIMIT_OF_ALERTS_PER_USER = 3
 
 // funcoes
 
-const getAlertById = (id) => {
-    return alerts.filter(alert => alert.id == id);
+// get to the db
+const getAlertById = async (id) => {
+    return await Notification.find({userId: id});
 }
 
-const deleteAlert = (alert) => {
-    const id = alert.id;
-    const index = alerts.findIndex(alert => alert.id == id);
-    alerts.splice(index, 1);
+// remove to the db
+const deleteAlert = async (alert) => {
+    const id = alert._id.toString();
+    try {
+        await Notification.findByIdAndDelete(id);
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 const createDeleteMessage = (alerts) => {
@@ -67,14 +77,13 @@ const createDeleteMessage = (alerts) => {
 const createVisualizeMessage = (alerts) => {
     const emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
     let message = "Aqui estão os alertas configurados:  \n"
-
     alerts.forEach((alert, index) => {
         const newMessage = `${emojis[index]} ${alert.symbol} - $${alert.price}\n`
         message += newMessage
     })
 
-    message += "\nSe precisar de mais alguma coisa, é só chamar!"
-    return message
+    message += "\nSe precisar de mais alguma coisa, é só chamar!";
+    return message;
 }
 
 // respostas as msgs
@@ -83,7 +92,8 @@ client.on('message', async msg => {
 
     const chatId = msg.from;
     const message = msg.body.toLowerCase();
-    const alertas_usuario = getAlertById(chatId);
+    const alertas = await getAlertById(chatId);
+    const alertas_usuario = Array.isArray(alertas) ? alertas : [alertas];
     const nenhum_alerta = alertas_usuario.length == 0;
 
     if (!userStates[chatId]) {
@@ -166,9 +176,10 @@ client.on('message', async msg => {
             let index;
             if (!isNaN(message)) {
                 index = parseFloat(message) - 1;
-                if (alertas_usuario[index]) {
+                const alertToRemove = alertas_usuario[index];
+                if (alertToRemove) {
                     deleteAlert(alertas_usuario[index]);
-                    await client.sendMessage(chatId, `O alerta para ${userState.cryptoSymbol} com preço $${userState.price} foi removido com sucesso. ✅`)
+                    await client.sendMessage(chatId, `O alerta para ${alertToRemove.symbol} com preço $${alertToRemove.price} foi removido com sucesso. ✅`)
                     await client.sendMessage(chatId, "Se precisar de mais alguma coisa, é só chamar!");
                     userState.state = "inicial";
                 } else {
@@ -222,38 +233,43 @@ async function updateBook() {
     }
 }
 
-function addAlert(id, symbol, price) {
+
+// add to the db
+function addAlert(userId, symbol, price) {
     const alert = {
-        id, 
+        userId, 
         symbol, 
         price: parseFloat(price),
         high: book[symbol] < price
     };
-    alerts.push(alert);
-    alertsQuantity += 1
+    const notification = new Notification(alert);
+    notification.save();
 }
 
-function checkAlerts() {
-    alerts.forEach(async (alert, index) => {
-        if (book[alert.symbol === undefined]) {
-            console.log("Symbol invalid");
-            alerts.splice(index, 1);
-        }
+let isRunning = false;
 
+// get to the the db
+async function checkAlerts() {
+    if (isRunning) return;
+    isRunning = true;
+
+    const alerts = await Notification.find();
+
+    alerts.forEach(async (alert) => {
         const currentPrice = book[alert.symbol];
-
         if (alert.high) {
             if (currentPrice >= alert.price) {
                 await client.sendMessage(alert.id, generateMessage(alert.symbol, alert.price));
-                alerts.splice(index, 1);
+                await deleteAlert(alert);
             }
         } else {
-            if (currentPrice <= alert.price) {
+            if (currentPrice, alert.price) {
                 await client.sendMessage(alert.id, generateMessage(alert.symbol, alert.price));
-                alerts.splice(index, 1);
+                await deleteAlert(alert);
             }
         }
     })
+    isRunning = false;
 }
 
 setInterval(updateBook, INTERVAL);
