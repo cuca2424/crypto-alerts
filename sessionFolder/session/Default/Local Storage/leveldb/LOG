@@ -1,3 +1,2 @@
-2024/12/03-15:28:05.641 1238 Reusing MANIFEST C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\Local Storage\leveldb/MANIFEST-000001
-2024/12/03-15:28:05.642 1238 Recovering log #3
-2024/12/03-15:28:05.642 1238 Reusing old log C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\Local Storage\leveldb/000003.log 
+2024/12/08-21:37:31.559 768 Creating DB C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\Local Storage\leveldb since it was missing.
+2024/12/08-21:37:31.749 768 Reusing MANIFEST C:\Users\Windows\Desktop\chatbot\sessionFolder\session\Default\Local Storage\leveldb/MANIFEST-000001
